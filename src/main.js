@@ -5,6 +5,8 @@ const BOARD = {
   goal: { top: 342, bottom: 657, depth: 64 },
 };
 
+const FRAME_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315];
+
 const ASSET_PATHS = {
   board: "assets/foosball_empty_bars.png",
   ball: "assets/foosball_ball.png",
@@ -12,7 +14,6 @@ const ASSET_PATHS = {
   blueFrames: framePaths("blue"),
 };
 
-const FRAME_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315];
 const WIN_SCORE = 8;
 
 const DIFFICULTY = {
