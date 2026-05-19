@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#0a0d12">
+    <title>Foosball Arcade</title>
+    <link rel="stylesheet" href="styles/app.css">
+  </head>
+  <body>
+    <main id="app" class="app">
+      <canvas id="gameCanvas" aria-label="Foosball Arcade game board"></canvas>
+
+      <section id="menu" class="menu overlay-panel" aria-label="Game setup">
+        <div class="brand">
+          <span class="eyebrow">First to 8 wins</span>
+          <h1>Foosball Arcade</h1>
+        </div>
+        <div class="difficulty-row" role="group" aria-label="Choose difficulty">
+          <button class="difficulty selected" data-difficulty="easy" type="button">
+            <span>Easy</span>
+          </button>
+          <button class="difficulty" data-difficulty="medium" type="button">
+            <span>Medium</span>
+          </button>
+          <button class="difficulty" data-difficulty="hard" type="button">
+            <span>Hard</span>
+          </button>
+        </div>
+        <button id="startButton" class="primary-action" type="button">Start Match</button>
+      </section>
+
+      <section id="endScreen" class="end-screen overlay-panel hidden" aria-label="Match complete">
+        <span id="winnerLabel" class="eyebrow">Final</span>
+        <h2 id="winnerTitle">Red Wins</h2>
+        <button id="restartButton" class="primary-action" type="button">Play Again</button>
+      </section>
+
+      <div id="hud" class="hud hidden" aria-live="polite">
+        <div class="score red-score">
+          <span>RED</span>
+          <strong id="redScore">0</strong>
+        </div>
+        <div id="statusText" class="status-text">Tap BALL to serve</div>
+        <div class="score blue-score">
+          <span>BLUE</span>
+          <strong id="blueScore">0</strong>
+        </div>
+      </div>
+
+      <button id="ballButton" class="ball-button hidden" type="button">BALL</button>
+
+      <section id="rotateNotice" class="rotate-notice hidden" aria-label="Rotate device">
+        <div>
+          <h2>Turn Landscape</h2>
+          <p>Foosball Arcade is built for a wide table view.</p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
