@@ -762,7 +762,7 @@ function drawPlayers() {
 function drawPlayerSprite(rod, x, y) {
   const team = rod.team;
   const frames = getBlendFrames(rod.angle);
-  const size = 308;
+  const size = 185;
   const liftAlpha = rod.state === "lifted" ? 0.82 : 1;
 
   ctx.save();
