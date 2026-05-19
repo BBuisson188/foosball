@@ -69,6 +69,7 @@ const els = {
   blueScore: document.querySelector("#blueScore"),
   statusText: document.querySelector("#statusText"),
   ballButton: document.querySelector("#ballButton"),
+  fullscreenButton: document.querySelector("#fullscreenButton"),
   rotateNotice: document.querySelector("#rotateNotice"),
   endScreen: document.querySelector("#endScreen"),
   winnerTitle: document.querySelector("#winnerTitle"),
@@ -164,6 +165,10 @@ function setupEvents() {
     ensureAudio();
     serveBall();
   });
+
+  els.fullscreenButton.addEventListener("click", toggleFullscreen);
+  document.addEventListener("fullscreenchange", updateFullscreenButton);
+  document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
 
   canvas.addEventListener("pointerdown", onPointerDown, { passive: false });
   canvas.addEventListener("pointermove", onPointerMove, { passive: false });
@@ -652,18 +657,49 @@ function findRedRodInZone(x, y) {
 function serveBall() {
   if (game.mode !== "waiting") return;
 
-  const fromLeft = game.lastConceded === "red";
   ball.state = "active";
-  ball.x = fromLeft ? BOARD.field.left + 42 : BOARD.field.right - 42;
-  ball.y = BOARD.height * 0.5 + (Math.random() * 2 - 1) * 130;
-  ball.vx = (fromLeft ? 1 : -1) * (420 + Math.random() * 90);
-  ball.vy = (Math.random() * 2 - 1) * 115;
+  ball.x = BOARD.width * 0.5 + (Math.random() * 2 - 1) * 42;
+  ball.y = BOARD.field.bottom + 58;
+  ball.vx = (Math.random() * 2 - 1) * 125;
+  ball.vy = -(500 + Math.random() * 110);
   ball.trail = [];
   ball.squash = 0.2;
   game.mode = "playing";
   els.ballButton.classList.add("hidden");
   els.statusText.textContent = `${game.difficulty.toUpperCase()} AI`;
   playServe();
+}
+
+async function toggleFullscreen() {
+  const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+
+  try {
+    if (fullscreenElement) {
+      const exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exitFullscreen) {
+        await exitFullscreen.call(document);
+      }
+    } else {
+      const target = document.documentElement;
+      const requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen;
+      if (requestFullscreen) {
+        await requestFullscreen.call(target);
+      } else {
+        els.statusText.textContent = "Fullscreen unavailable";
+      }
+    }
+  } catch (error) {
+    els.statusText.textContent = "Fullscreen blocked";
+  }
+
+  updateFullscreenButton();
+}
+
+function updateFullscreenButton() {
+  const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+  els.fullscreenButton.classList.toggle("is-fullscreen", Boolean(fullscreenElement));
+  els.fullscreenButton.setAttribute("aria-label", fullscreenElement ? "Exit fullscreen" : "Enter fullscreen");
+  els.fullscreenButton.title = fullscreenElement ? "Exit fullscreen" : "Fullscreen";
 }
 
 function showBallButton(status) {

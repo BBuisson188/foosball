@@ -216,6 +216,60 @@ h2 {
   cursor: pointer;
 }
 
+.icon-button {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  color: #f7fbff;
+  background: rgba(5, 8, 12, 0.68);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+}
+
+.fullscreen-button {
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  width: 48px;
+  height: 48px;
+}
+
+.fullscreen-button span,
+.fullscreen-button span::before,
+.fullscreen-button span::after {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  content: "";
+}
+
+.fullscreen-button span {
+  border-top: 3px solid currentColor;
+  border-left: 3px solid currentColor;
+  transform: translate(-4px, -4px);
+}
+
+.fullscreen-button span::before {
+  right: -12px;
+  top: 0;
+  border-top: 3px solid currentColor;
+  border-right: 3px solid currentColor;
+}
+
+.fullscreen-button span::after {
+  left: 0;
+  bottom: -12px;
+  border-bottom: 3px solid currentColor;
+  border-left: 3px solid currentColor;
+}
+
+.fullscreen-button.is-fullscreen span {
+  transform: translate(0, 0) scale(0.82);
+}
+
 .end-screen {
   z-index: 5;
   display: grid;
@@ -275,5 +329,12 @@ h2 {
     width: 74px;
     height: 74px;
     font-size: 0.9rem;
+  }
+
+  .fullscreen-button {
+    top: 8px;
+    right: 8px;
+    width: 42px;
+    height: 42px;
   }
 }
