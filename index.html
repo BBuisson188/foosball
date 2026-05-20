@@ -47,6 +47,15 @@
         <button id="restartButton" class="primary-action" type="button">Play Again</button>
       </section>
 
+      <section id="pauseScreen" class="pause-screen overlay-panel hidden" aria-label="Game paused">
+        <span class="eyebrow">Paused</span>
+        <h2>Foosball Arcade</h2>
+        <div class="pause-actions">
+          <button id="resumeButton" class="primary-action" type="button">Resume</button>
+          <button id="exitButton" class="secondary-action" type="button">Exit to Menu</button>
+        </div>
+      </section>
+
       <div id="hud" class="hud hidden" aria-live="polite">
         <div class="score red-score">
           <span>RED</span>
@@ -60,6 +69,10 @@
       </div>
 
       <button id="fullscreenButton" class="icon-button fullscreen-button" type="button" aria-label="Enter fullscreen" title="Fullscreen">
+        <span aria-hidden="true"></span>
+      </button>
+
+      <button id="pauseButton" class="icon-button pause-button hidden" type="button" aria-label="Pause" title="Pause">
         <span aria-hidden="true"></span>
       </button>
 

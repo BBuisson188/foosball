@@ -71,6 +71,10 @@ const els = {
   statusText: document.querySelector("#statusText"),
   ballButton: document.querySelector("#ballButton"),
   fullscreenButton: document.querySelector("#fullscreenButton"),
+  pauseButton: document.querySelector("#pauseButton"),
+  pauseScreen: document.querySelector("#pauseScreen"),
+  resumeButton: document.querySelector("#resumeButton"),
+  exitButton: document.querySelector("#exitButton"),
   rotateNotice: document.querySelector("#rotateNotice"),
   endScreen: document.querySelector("#endScreen"),
   winnerTitle: document.querySelector("#winnerTitle"),
@@ -98,6 +102,7 @@ const game = {
   time: 0,
   pausedForGoal: 0,
   winningTeam: null,
+  prePauseMode: "waiting",
 };
 
 const input = {
@@ -151,6 +156,7 @@ function setupEvents() {
     game.mode = "waiting";
     els.menu.classList.add("hidden");
     els.hud.classList.remove("hidden");
+    els.pauseButton.classList.remove("hidden");
     showBallButton("Tap BALL to serve");
   });
 
@@ -159,6 +165,7 @@ function setupEvents() {
     game.mode = "waiting";
     els.endScreen.classList.add("hidden");
     els.hud.classList.remove("hidden");
+    els.pauseButton.classList.remove("hidden");
     showBallButton("Tap BALL to serve");
   });
 
@@ -168,6 +175,9 @@ function setupEvents() {
   });
 
   els.fullscreenButton.addEventListener("click", toggleFullscreen);
+  els.pauseButton.addEventListener("click", pauseGame);
+  els.resumeButton.addEventListener("click", resumeGame);
+  els.exitButton.addEventListener("click", exitToMenu);
   document.addEventListener("fullscreenchange", updateFullscreenButton);
   document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
 
@@ -227,6 +237,7 @@ function resetMatch() {
   game.flash = 0;
   game.pausedForGoal = 0;
   game.winningTeam = null;
+  game.prePauseMode = "waiting";
   rods = RODS.map(createRod);
   ball = createBall();
   updateHud();
@@ -289,6 +300,11 @@ function loop(now) {
 }
 
 function update(dt) {
+  if (game.mode === "paused") {
+    updateAudio();
+    return;
+  }
+
   game.time += dt;
   game.shake = Math.max(0, game.shake - dt * 18);
   game.flash = Math.max(0, game.flash - dt * 3.2);
@@ -498,6 +514,7 @@ function scoreGoal(team) {
     game.winningTeam = team;
     els.hud.classList.add("hidden");
     els.ballButton.classList.add("hidden");
+    els.pauseButton.classList.add("hidden");
     els.winnerLabel.textContent = `${game.scores.red} - ${game.scores.blue}`;
     els.winnerTitle.textContent = `${team.toUpperCase()} Wins`;
     els.endScreen.classList.remove("hidden");
@@ -666,8 +683,49 @@ function serveBall() {
   ball.squash = 0.2;
   game.mode = "playing";
   els.ballButton.classList.add("hidden");
+  els.pauseButton.classList.remove("hidden");
   els.statusText.textContent = `${game.difficulty.toUpperCase()} AI`;
   playServe();
+}
+
+function pauseGame() {
+  if (game.mode !== "playing" && game.mode !== "waiting") return;
+
+  game.prePauseMode = game.mode;
+  game.mode = "paused";
+  input.pointers.clear();
+  for (const rod of rods) {
+    rod.activePointerId = null;
+  }
+  els.pauseScreen.classList.remove("hidden");
+  els.ballButton.classList.add("hidden");
+  els.pauseButton.classList.add("hidden");
+  els.statusText.textContent = "Paused";
+}
+
+function resumeGame() {
+  if (game.mode !== "paused") return;
+
+  game.mode = game.prePauseMode;
+  els.pauseScreen.classList.add("hidden");
+  els.pauseButton.classList.remove("hidden");
+  if (game.mode === "waiting") {
+    showBallButton("Tap BALL to serve");
+  } else {
+    els.statusText.textContent = `${game.difficulty.toUpperCase()} AI`;
+  }
+}
+
+function exitToMenu() {
+  input.pointers.clear();
+  resetMatch();
+  game.mode = "menu";
+  els.pauseScreen.classList.add("hidden");
+  els.endScreen.classList.add("hidden");
+  els.hud.classList.add("hidden");
+  els.ballButton.classList.add("hidden");
+  els.pauseButton.classList.add("hidden");
+  els.menu.classList.remove("hidden");
 }
 
 async function toggleFullscreen() {
