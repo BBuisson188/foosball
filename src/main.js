@@ -6,6 +6,7 @@ const BOARD = {
 };
 
 const FRAME_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315];
+const ROD_EDGE_MARGIN = 28;
 
 const ASSET_PATHS = {
   board: "assets/foosball_empty_bars.png",
@@ -47,14 +48,14 @@ const DIFFICULTY = {
 };
 
 const RODS = [
-  { id: "red_goal", team: "red", x: 166, count: 3, baseY: [238, 498, 758], zone: [104, 536, 130, 394] },
-  { id: "red_defense", team: "red", x: 321, count: 2, baseY: [336, 668], zone: [263, 536, 130, 394] },
-  { id: "blue_attack", team: "blue", x: 489, count: 3, baseY: [238, 498, 758] },
-  { id: "red_midfield", team: "red", x: 675, count: 5, baseY: [174, 337, 500, 663, 826], zone: [607, 536, 130, 394] },
-  { id: "blue_midfield", team: "blue", x: 846, count: 5, baseY: [174, 337, 500, 663, 826] },
-  { id: "red_attack", team: "red", x: 1027, count: 3, baseY: [238, 498, 758], zone: [977, 536, 130, 394] },
-  { id: "blue_defense", team: "blue", x: 1193, count: 2, baseY: [336, 668] },
-  { id: "blue_goal", team: "blue", x: 1353, count: 3, baseY: [238, 498, 758] },
+  { id: "red_goal", team: "red", x: 169, count: 3, baseY: [238, 498, 758], zone: [104, 536, 130, 394] },
+  { id: "red_defense", team: "red", x: 329, count: 2, baseY: [336, 668], zone: [263, 536, 130, 394] },
+  { id: "blue_attack", team: "blue", x: 490, count: 3, baseY: [238, 498, 758] },
+  { id: "red_midfield", team: "red", x: 674, count: 5, baseY: [174, 337, 500, 663, 826], zone: [607, 536, 130, 394] },
+  { id: "blue_midfield", team: "blue", x: 851, count: 5, baseY: [174, 337, 500, 663, 826] },
+  { id: "red_attack", team: "red", x: 1036, count: 3, baseY: [238, 498, 758], zone: [977, 536, 130, 394] },
+  { id: "blue_defense", team: "blue", x: 1196, count: 2, baseY: [336, 668] },
+  { id: "blue_goal", team: "blue", x: 1356, count: 3, baseY: [238, 498, 758] },
 ];
 
 const canvas = document.querySelector("#gameCanvas");
@@ -251,8 +252,8 @@ function createRod(config) {
     cooldown: 0,
     aiTarget: 0,
     aiThink: 0,
-    minOffset: BOARD.field.top + 80 - minY,
-    maxOffset: BOARD.field.bottom - 80 - maxY,
+    minOffset: BOARD.field.top + ROD_EDGE_MARGIN - minY,
+    maxOffset: BOARD.field.bottom - ROD_EDGE_MARGIN - maxY,
     shake: 0,
   };
 }
@@ -528,7 +529,6 @@ function wallHit() {
 
 function onPointerDown(event) {
   if (game.mode !== "playing" && game.mode !== "waiting") return;
-  if (game.mode === "waiting") return;
   event.preventDefault();
   ensureAudio();
 
